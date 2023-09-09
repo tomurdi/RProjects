@@ -1,6 +1,6 @@
 ---
 title: "R Basics"
-author: " Your Name and id"
+author: "Tomas Urdinola, 117971262"
 output:
   pdf_document:
     toc: yes
@@ -20,16 +20,43 @@ a. In the code segment below, assign the value 2 to variable x, and the value 6 
 b. Construct a list of all even numbers between 1 and 100, assign this to the variable 'even'. Construct a list of 100 numbers, starting with 1, such that the difference between consecutive numbers is three, assign this to the variable 'threes'.
 Construct a list of 100 equally spaced numbers between 0 and 2. Assign this to the variable x.
 ```{r}
-  
+even = list()
+for (i in 1:100){
+  if (i %% 2 == 0) {
+    even <- append(even,i)
+  }
+}
+
+threes = list()
+size = 0
+counter = 1
+while (size < 100) {
+  threes = append(threes,counter)
+  counter = counter + 3
+  size = size + 1
+}
+
+x = list()
+size = 0
+counter = 0
+while (size < 100) {
+  x = append(x,counter)
+  counter = counter + .02
+  size = size + 1
+}
 ```
 
 c. Define a function that computes the square of the input value, call this function square:
 ```{r}
-
+x = function(num) {
+  sqrt(num)
+}
 ```
 d. Plot trigonometric functions sine and cosine for values of x between 0 and 10. Also plot the 'square' function for input values between 0 and 2.
 ```{r}
-  
+t = seq(0,10)
+y = sin(t)
+plot(t,y,type="l",xlab="x values", ylab= "y values")
 ```
 
 # Working with data in R. 
