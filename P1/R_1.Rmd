@@ -114,13 +114,9 @@ We want to see if there is any relationship between the variables. To do so, it 
 Use the "head" command to view the first five rows of these data frames.
 
 ```{r}
-<<<<<<< HEAD
   setosa = head(dplyr::filter(iris, Species == 'setosa'))
   versicolor = head(dplyr::filter(iris, Species == 'versicolor'))
   virginica = head(dplyr::filter(iris, Species == 'virginica'))
-=======
-  install.packages('dplyr')
-  library(dplyr)
   setosa = (dplyr::filter(iris, Species == 'setosa'))
   versicolor = (dplyr::filter(iris, Species == 'versicolor'))
   virginica = (dplyr::filter(iris, Species == 'virginica'))
@@ -128,7 +124,6 @@ Use the "head" command to view the first five rows of these data frames.
   head(setosa)
   head(versicolor)
   head(virginica)
->>>>>>> 4e0f82f0e4c7d00e601367f394039678cb6146d4
 
 ```
 
