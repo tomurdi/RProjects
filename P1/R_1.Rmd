@@ -116,9 +116,13 @@ Use the "head" command to view the first five rows of these data frames.
 ```{r}
   install.packages('dplyr')
   library(dplyr)
-  setosa = head(dplyr::filter(iris, Species == 'setosa'))
-  versicolor = head(dplyr::filter(iris, Species == 'versicolor'))
-  virginica = head(dplyr::filter(iris, Species == 'virginica'))
+  setosa = (dplyr::filter(iris, Species == 'setosa'))
+  versicolor = (dplyr::filter(iris, Species == 'versicolor'))
+  virginica = (dplyr::filter(iris, Species == 'virginica'))
+  
+  head(setosa)
+  head(versicolor)
+  head(virginica)
 
 ```
 
@@ -139,7 +143,7 @@ boxplot(setosa$Sepal.Width, versicolor$Sepal.Width, virginica$Sepal.Width, names
 
 Note at least two observations that you can make looking at these boxplots. 
 
-There is more variance in speal width than in petal length. Also there seems to be a correlation between species having a small speal width but a bigger petal length and vice versa. 
+There is more variance in sepal width than in petal length. The sepal width has closer medians than the petal length.
 
 
 # Data Visualization: Histograms
