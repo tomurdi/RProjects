@@ -1,6 +1,6 @@
 ---
 title: "R Basics"
-author: "Hadijat Oke 117818512"
+author: "Hadijat Oke 117818512, Thomas Urdinola 117971262"
 output:
   pdf_document:
     toc: yes
@@ -8,6 +8,7 @@ output:
     number_sections: yes    
     toc: yes
 ---
+
 
 # Basic R manipulation.
 a. In the code segment below, assign the value 2 to variable x, and the value 6 to variable y. Then compute the sum 'x+y':
@@ -114,6 +115,8 @@ We want to see if there is any relationship between the variables. To do so, it 
 Use the "head" command to view the first five rows of these data frames.
 
 ```{r}
+  install.packages('dplyr')
+  library(dplyr)
   setosa = head(dplyr::filter(iris, Species == 'setosa'))
   versicolor = head(dplyr::filter(iris, Species == 'versicolor'))
   virginica = head(dplyr::filter(iris, Species == 'virginica'))
@@ -170,15 +173,34 @@ samp_data <- c(1.54,0.56,1.67,1.54,1.30,1.15,1.59,-0.22,1.01,1.03,1.02,1.77,1.13
                3.64,3.43,3.27,2.41,3.60,2.75,2.94,3.23,3.22,2.81,2.72,3.62,2.94,3.17,3.11,
                2.60,3.11,3.45,2.37,3.07,3.09,3.90,2.86,3.23,3.50,2.84,2.17,2.58,3.57,2.95,
                2.56,2.42,3.38,3.28,3.19,2.77,3.27,4.01,3.65,3.39)
+mean(samp_data)
 ```
 
 Use the 'hist' function to visualize samp_data. Furthermore, use different values of for the "breaks" parameter, which species the number of bins, to explore the shape of the data.
 
 ```{r}
   hist(samp_data)
+  hist(samp_data,breaks = 1.0, main = "With breaks 1.0")
+  hist(samp_data,breaks = 1.5, main = "With breaks 1.5")
+  hist(samp_data,breaks = 2.0, main = "With breaks 2.0")
+  hist(samp_data,breaks = 2.5, main = "With breaks 2.5")
+  hist(samp_data,breaks = 3.0, main = "With breaks 3.0")
+  hist(samp_data,breaks = 3.5, main = "With breaks 3.5")
+  hist(samp_data,breaks = 4.0, main = "With breaks 4.0")
+  hist(samp_data, breaks = 4.5, main ="With breaks 4.5")
+  
 ```
 
 What are some good values for the "breaks" parameter? Why?
 
-Is the sample mean a good measure of location for this dataset? Why? 
+As we see from the histograms, the higher the breaks parameter is,
+the more populated our cells are. This means that we are able to analyze
+our data more clearly.
 
+
+Is the sample mean a good measure of location for this dataset? Why?
+
+The mean of the sample data is 2.53215, according to the mean() function.
+As we look at our histograms, we see that every break always includes the mean
+in the populated data cells as part of our data set, meaning that it is 
+a good measure of location.
