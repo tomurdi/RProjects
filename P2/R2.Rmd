@@ -1,0 +1,538 @@
+---
+title: "Experiments, Conditional Probability, and Bayes' Theorem"
+author: " Your Name and id"
+output:
+  html_document:
+    number_sections: yes    
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+# Simulating Experiments
+In this problem we will simulate two important experiments: coin tosses and die rolls. 
+
+We will explore empirical probability of events using random samples. The two important functions to understand are "sample" and "replicate".
+
+We use the sample function to set up our experiment, and replicate function to repeat it as many times as we want.
+
+
+## Die Rolls
+Setup the experiment where we roll two fair six 6-sided die independently, and calculate the sum of the numbers that appear for each of them. 
+```{r}
+roll_dice <- function(){
+  die1 <- sample(1:6, 1, replace = TRUE)
+  die2 <- sample(1:6, 1, replace = TRUE)
+  return(die1 + die2)
+}
+
+roll_dice()
+```
+
+
+Use the replicate function to repeat this experiment 10000 times, store the output of the experiment in a variable "sum_die". 
+```{r}
+sum_die <- replicate(1000,roll_dice())
+sum_die
+```
+Use "sum_die" to calculate the empirical probability of getting the sums 2, 3, 4, ..., 12. Compare your answers with the theoretical values.
+
+```{r}
+X <- 1000
+sum_die <- replicate(X,roll_dice)
+sum_sample <- sample(c(1,2,3,4,5,6),size = X, replace = TRUE)
+sum(sum_sample[1]+sum_sample[2])
+```
+
+Plot the following: relative frequency of getting sum equal to 4 as a function of number of trials, for this experiment.
+```{r}
+num_trials <- 1000
+relative_frequencies <- numeric(num_trials)
+for (i in 1:num_trials) {
+  outcomes <- replicate(i, roll_dice())
+  relative_frequencies[i] <- sum(outcomes == 4) / i
+}
+plot(1:num_trials, relative_frequencies, type = "l", xlab = "Number of Trials", ylab = "Relative Frequency", main = "Relative Frequency of Sum 4 vs. Number of Trials")
+
+```
+
+## Coin Tosses for Binomial Distribution
+Suppose we toss a coin with $P(H) = 0.8$, $n$ times independently. Let $X$ be the the random variable that counts the number of heads in $n$ tosses. 
+
+### n = 2
+Setup a function that simulates the random variable $X$ when we toss the coin two times. 
+```{r}
+toss <- function(){
+  coin_toss <- sample(c("H", "T"), size = 2, replace = TRUE, prob = c(1/2, 1/2))
+  return(coin_toss)
+}
+
+toss()
+```
+Use the above function to calculate the emprical probability distribution table for $X$. Compare this with the theoretical probability distribution of $X$. 
+```{r}
+num_trials <- 10000
+
+# Initialize a table to store the counts of each outcome
+outcome_table <- table(replicate(num_trials, paste(toss(), collapse = "")))
+
+# Calculate empirical probabilities
+empirical_probs <- outcome_table / sum(outcome_table)
+
+# Create a data frame for the probability distribution table
+probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+
+probability_table
+
+```
+Calculate emprical estimates for the expected value and the variance of $X$. Compre these with the actual theoretical calculations. 
+```{r}
+num_trials <- 10000
+
+sum_outcomes <- 0
+sum_squares <- 0
+
+# Simulate coin tosses and calculate the sum and sum of squares
+for (i in 1:num_trials) {
+  result <- sum(as.integer(toss() == "H"))  # Count "H" as 1, "T" as 0
+  sum_outcomes <- sum_outcomes + result
+  sum_squares <- sum_squares + result^2
+}
+
+# Calculate empirical estimates for the expected value and variance
+mean_estimate <- sum_outcomes / num_trials
+variance_estimate <- (sum_squares / num_trials) - (mean_estimate^2)
+
+mean_estimate
+variance_estimate
+```
+
+### n = 3
+Setup a function that simulates the random variable $X$ when we toss the coin three times. 
+```{r}
+toss <- function(){
+  coin_toss <- sample(c("H", "T"), size = 3, replace = TRUE, prob = c(1/2, 1/2))
+  return(coin_toss)
+}
+
+toss()
+
+```
+Use the above function to calculate the emprical probability distribution table for $X$. Compare this with the theoretical probability distribution of $X$. 
+```{r}
+num_trials <- 10000
+
+# Initialize a table to store the counts of each outcome
+outcome_table <- table(replicate(num_trials, paste(toss(), collapse = "")))
+
+# Calculate empirical probabilities
+empirical_probs <- outcome_table / sum(outcome_table)
+
+# Create a data frame for the probability distribution table
+probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+
+probability_table
+```
+Calculate emprical estimates for the expected value and the variance of $X$. Compre these with the actual theoretical calculations. 
+```{r}
+num_trials <- 10000
+
+sum_outcomes <- 0
+sum_squares <- 0
+
+# Simulate coin tosses and calculate the sum and sum of squares
+for (i in 1:num_trials) {
+  result <- sum(as.integer(toss() == "H"))  # Count "H" as 1, "T" as 0
+  sum_outcomes <- sum_outcomes + result
+  sum_squares <- sum_squares + result^2
+}
+
+# Calculate empirical estimates for the expected value and variance
+mean_estimate <- sum_outcomes / num_trials
+variance_estimate <- (sum_squares / num_trials) - (mean_estimate^2)
+
+mean_estimate
+variance_estimate
+
+```
+
+### n = 4
+Setup a function that simulates the random variable $X$ when we toss the coin four times. 
+```{r}
+toss <- function(){
+  coin_toss <- sample(c("H", "T"), size = 4, replace = TRUE, prob = c(1/2, 1/2))
+  return(coin_toss)
+}
+
+toss()
+
+```
+Use the above function to calculate the emprical probability distribution table for $X$. Compare this with the theoretical probability distribution of $X$. 
+```{r}
+num_trials <- 10000
+
+# Initialize a table to store the counts of each outcome
+outcome_table <- table(replicate(num_trials, paste(toss(), collapse = "")))
+
+# Calculate empirical probabilities
+empirical_probs <- outcome_table / sum(outcome_table)
+
+# Create a data frame for the probability distribution table
+probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+
+probability_table
+```
+Calculate emprical estimates for the expected value and the variance of $X$. Compre these with the actual theoretical calculations. 
+```{r}
+num_trials <- 10000
+
+sum_outcomes <- 0
+sum_squares <- 0
+
+# Simulate coin tosses and calculate the sum and sum of squares
+for (i in 1:num_trials) {
+  result <- sum(as.integer(toss() == "H"))  # Count "H" as 1, "T" as 0
+  sum_outcomes <- sum_outcomes + result
+  sum_squares <- sum_squares + result^2
+}
+
+# Calculate empirical estimates for the expected value and variance
+mean_estimate <- sum_outcomes / num_trials
+variance_estimate <- (sum_squares / num_trials) - (mean_estimate^2)
+
+mean_estimate
+variance_estimate
+```
+## Coin Tosses for Negative Binomial Distribution.
+Suppose we toss a coin with $P(H) = 0.8$ until we get $r$ heads. 
+
+### r=1
+Setup an experiment that counts the number of tails until the first head. Run 10000 simulations of this experiment, and use these to find estimate for the expected number of tails until the first head. Match this value with the theoretical/calculated value.
+```{r}
+count_tails_until_head <- function() {
+  tails_count <- 0
+  while (TRUE) {
+    # Simulate a coin flip (0 for tails, 1 for heads)
+    coin_flip <- sample(0:1, 1)
+    tails_count <- tails_count + 1
+    if (coin_flip == 1) {  # Head
+      break
+    }
+  }
+  return(tails_count)
+}
+num_simulations <- 10000
+
+# Vector to store the results
+results <- numeric(num_simulations)
+
+# Run the simulations
+for (i in 1:num_simulations) {
+  results[i] <- count_tails_until_head()
+}
+expected_val <- mean(results)
+expected_val
+```
+
+### r = 2
+Setup an experiment that counts the number of tails until the second head. Run 10000 simulations of this experiment, and use these to find an estimate for the expected number of tails until the second head. Match this value with the theoretical/calculated value. 
+```{r}
+count_tails_until_second_head <- function() {
+  count_tails <- 0
+  head_count <- 0
+  
+  while (head_count < 2) {
+    # Simulate a coin flip (0 for tails, 1 for heads)
+    flip <- sample(0:1, 1)
+    
+    if (flip == 1) {
+      head_count <- head_count + 1
+    }
+    
+    count_tails <- count_tails + 1
+  }
+  
+  return(count_tails)
+}
+num_simulations <- 10000
+
+# Vector to store the results
+results <- numeric(num_simulations)
+
+# Run the simulations
+for (i in 1:num_simulations) {
+  results[i] <- count_tails_until_second_head()
+}
+expected_val <- mean(results)
+expected_val
+```
+
+
+### r = 3
+Setup an experiment that counts the number of tails until the third head. Run 10000 simulations of this experiment, and use these to find an estimate for the expected number of tails until the third head. Match this value with the theoretical/calculated value. 
+```{r}
+count_tails_until_second_head <- function() {
+  count_tails <- 0
+  head_count <- 0
+  
+  while (head_count < 3) {
+    # Simulate a coin flip (0 for tails, 1 for heads)
+    flip <- sample(0:1, 1)
+    
+    if (flip == 1) {
+      head_count <- head_count + 1
+    }
+    
+    count_tails <- count_tails + 1
+  }
+  
+  return(count_tails)
+}
+num_simulations <- 10000
+
+# Vector to store the results
+results <- numeric(num_simulations)
+
+# Run the simulations
+for (i in 1:num_simulations) {
+  results[i] <- count_tails_until_second_head()
+}
+expected_val <- mean(results)
+expected_val
+```
+
+
+# Simulating the Monty-Hall Problem
+An interesting application of conditional probability is the Monty-Hall problem, whose solution intrigued many, including career mathematicians (life is hard!). There is a lot of trivia around this problem in the internet, a good place to start would be the Wikipedia article here: https://en.wikipedia.org/wiki/Monty_Hall_problem
+
+In this project we will understand the solution of this problem using simulations.
+
+## Monty-Hall Three doors 
+
+Run a simulation to check that the probablility of winning increases to 2/3 if we switch doors at step two in the regular 3-door Monty-Hall problem. 
+
+Set up the experiment two functions "monty_3doors_noswitch" and "monty_3doors_switch" (these functions will have no input values):
+
+```{r}
+
+```
+
+Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
+Compare your answers with the actual theoretical predictions. 
+
+```{r}
+
+```
+
+
+
+## Monty-Hall with Ten doors.
+Repeat the Monty Hall experiment now with 10 doors. Recall the game is as follows: 
+Step 1: you choose one door at random.
+Step 2: Monty opens 8 (out of 9 doors) that do not have the prize. 
+Step 3: you either switch or don't switch. 
+
+Set up the experiment two functions "monty_10doors_noswitch" and "monty_10doors_switch" (these functions will have no input values):
+```{r}
+monty_10doors_noswitch <- function(){
+  
+}
+
+monty_10doors_switch <- function(){
+  
+}
+```
+Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
+Compare your answers with the actual theoretical predictions (you need to calculate these). 
+  
+```{r}
+
+```
+
+
+## Monty-Hall 10-doors (modified).
+Consider the following modified Monty-Hall game with 10 doors. 
+Step 1: you choose one door at random.
+Step 2: Monty opens 7 (out of 9 doors) that do not have the prize. 
+Step 3: you either stick with your original choice, or choose between one of the two unopened doors. 
+
+Set up the experiment two functions "monty_10doors_mod_noswitch" and "monty_10doors_mod_switch" (these functions will have no input values):
+```{r}
+#monty_10doors_mod_noswitch <- function(){
+  
+#}
+#my_door_and_prize_door <- c(my_door, prize_door)
+#not_my_door_nor_prize_door <- doors[!doors %in% my_door_and_prize_door]
+
+#monty_10doors_mod_switch <- function(){
+  
+#}
+```
+Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
+Calculate the theoretical probability of winning a prize if you switch, and if you don't switch. 
+Compare your values to the empirical probabilities. 
+```{r}
+
+```
+Not for submission: Play with this modified setup, for example Monty opens $k$ doors at step 2 etc with $k$ any number between 1 and 8. 
+
+
+## (Bonus) Monty Hall with n-doors.
+This is for your curiosity, you don't have to turn this in. However, if you work this general case out, you can use it to solve the earlier versions of the problem. 
+
+Repeat the Monty Hall experiment now with n doors. Recall the game is as follows: 
+Step 1: you choose one door at random.
+Step 2: Monty opens n-2 (out of n-1 doors) that do not have the prize. 
+Step 3: you either switch or don't switch. 
+
+Set up the experiment two functions "monty_ndoors_noswitch" and "monty_ndoors_switch" (these functions will have input value as n):
+
+```{r}
+monty_ndoors_noswitch <- function(n){
+  
+}
+
+monty_ndoors_switch <- function(n){
+  
+}
+```
+
+Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
+Compare your answers with the actual theoretical predictions.
+```{r}
+
+```
+
+# Bayes's Theorem and Witnesses
+Recall the hit-and-run example from the asynchronous lecture and HW4. We noted that the Bayes' probabilities are calculated as the following formula 
+$$ P(B|W) = \frac{pq}{pq + (1-p)(1-q)},$$
+where $P(B) = q$ and $P(W|B) = p$ (check notes). 
+We also noted in HW4 that if $P(W|B)=p > \frac{1}{2}$ we will have
+$$ P(B|W) > P(B).$$
+
+In this problem, we will explore how changing the level of Witness-Reliability, that is $p$, will affect the chance of getting a Blue Cab driver arrested. 
+
+Recall that $P(B)$ is the probability that the Blue cab is at fault with no added information. We will now run multiple iteration of Bayes' rule, and at every iteration, we will update the value of $P(B)$ with the value of $P(B|W)$ from earlier iteration. From our experience from the homework, if $p > \frac{1}{2}$, we must have $P(B) \longrightarrow 1$ as the number of iterations increase (intuitively, the probability that the Blue cab is at fault will go to 1 as the number of "reliable witness" who say that "the Blue Cab is at fault" increases). 
+
+Write a function called "bayes" that takes input $q, p$ and outputs $P(B|W)$ (use the formula above)
+```{r}
+bayes <- function(q, p){
+  return(p*q/(p*q + (1-p)*(1-q)))
+}
+
+bayes(0.01, 0.8)
+```
+
+## Reliable Witnesses with fixed probability
+In this part, we will assume that we are using testimony of reliable witnesses with fixed reliability $p$. 
+
+### Initial Plots
+Initialize $p=0.6$, $q=0.01$, and q_vals = c(), the empty vector. Run a for loop (1 in 1:40) inside it, update q at every iteration to $q = \text{bayes}(p,q)$, and concatenate the vector q_vals with this new value of q. 
+```{r}
+
+```
+
+Construct a plot with x-axis 1:40 and y-axis q_vals.
+```{r}
+
+```
+
+Repeat the above experiment with $p=0.4$, $q=0.99$. 
+```{r}
+
+```
+
+
+### How many reliable Witnesses needed?
+Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
+
+Suppose we intialize  $p=0.6$ (witness reliability), $q=0.01$ (proportion of Blue cabs in the city), how many witnesses with reliability level $p$ would we need for the police to consider arresting the Blue cab? 
+
+You will need a counter variable initialized to zero and a while loop inside which you update $q$ using the bayes function, and update the counter by 1 at every iteration of the while loop. 
+```{r}
+
+```
+
+
+## Working with two types of witnesses
+In this problem we will work with two types of witnesses (1) reliable witnesses with fixed reliability level $p_1 > \frac{1}{2}$ and (2) unreliable witness with fixed reliability level $p_2 < \frac{1}{2}$. 
+
+### Initial Plots
+Initialize $p_1=0.6$, $p_2 = 0.45$, $q=0.01$, and q_vals = c(), the empty vector. Run a for loop (1 in 1:90) inside it, update q at every even iteration to $q = \text{bayes}(p_2,q)$, and at every odd iteration to $q = \text{bayes}(p_1,q)$ (You will need to use a "if" command), and finally concatanating the vector q_vals with the new value of q at every iteration. 
+```{r}
+
+
+```
+
+Construct a plot with x-axis 1:90 and y-axis q_vals.
+```{r}
+
+```
+What do you notice? (Compared to case with single witness)
+
+### How many witnesses needed?
+Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
+
+Initialize $p_1=0.6$, $p_2 = 0.45$, $q=0.01$. How many witnesses will we have to have if we are going to sequentially work with one reliable witness followed by an unreliable witness? 
+
+```{r}
+
+```
+
+This problem can be generalized to choosing $p$ from any given probability distribution on $(0,1)$, we will be working with the Beta distribution later in the semester, which can be an interesting candidate to sample our values for $p$ (that is witness reliability).  
+
+## Working with four types of witnesses
+In this problem we will work with two types of witnesses (1) two reliable witnesses with fixed reliability level $p_1, p_2 > \frac{1}{2}$ and (2) two unreliable witnesses with fixed reliability level $p_3, p_4 < \frac{1}{2}$. 
+
+### Initial Plots
+Initialize $q=0.01$ and we will sample $p$ from the vector c(0.6, 0.8, 0.45, 0.3) and suppose choosing a witness with either of these witness-reliabilities is equally likely.
+
+Now let q_vals = c(), the empty vector and run a for loop (1 in 1:100) inside it, update q by sampling p from the vector c(0.6, 0.8, 0.45, 0.3), and concatanating the vector q_vals with the new value of q at every iteration. 
+```{r}
+
+```
+
+Construct a plot with x-axis 1:100 and y-axis q_vals.
+```{r}
+
+```
+What do you notice? How does this compare with the earlier cases?
+
+### How many witnesses needed?
+Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
+
+Initialize $q=0.01$ and we will sample $p$ from the vector c(0.6, 0.8, 0.45, 0.3) and suppose choosing a witness with either of these witness-reliabilities is equally likely. How many witnesses will we need to have if we are going to uniformly sample from each of these four types of of witnesses at every step? 
+
+```{r}
+
+```
+
+## BONUS: Working with witnesses coming from a Beta distribution
+In this problem we will assume that the witness reliability of the people in the city follows the Beta distribution with parameters $\alpha$, $\beta$. Choose $\alpha, \beta$ in such a way that the expected value of this Beta distribution is greater than .65. 
+
+### Initial Plots
+Initialize $q=0.01$ and we will choose $p$ by sampling the Beta distribution with parameters $\alpha, \beta$ chosen above.
+
+Now let q_vals = c(), the empty vector and run a for loop (1 in 1:100) inside it, update q by sampling p $\text{Beta}(\alpha, \beta)$, and concatanating the vector q_vals with the new value of q at every iteration. 
+```{r}
+
+```
+
+Construct a plot with x-axis 1:100 and y-axis q_vals.
+```{r}
+
+```
+What do you notice? How does this compare with the earlier cases?
+
+### How many witnesses needed?
+Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
+
+Initialize $q=0.01$ and we will choose $p$ by sampling the Beta distribution with parameters $\alpha, \beta$ chosen above. How many witnesses will we need to have in this setting? 
+
+```{r}
+
+```
+
+
+
+
