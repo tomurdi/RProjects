@@ -315,12 +315,94 @@ Set up the experiment two functions "monty_3doors_noswitch" and "monty_3doors_sw
 
 ```{r}
 
+monty_3doors_noswitch <- function(){
+    prize <- sample(1:3, 1)
+    choice = 1
+    if (prize == choice){
+      1
+    } else{
+      0
+    }
+  
+  
+}
+
+monty_3doors_switch <- function(){
+  
+  prize <- sample(1:3,1)
+  choice = 1
+  
+  if(prize == choice){
+    notprize = sample(2:3,1)
+    if(notprize == 2){
+      choice = 3
+    } else{
+      choice = 2
+    }
+  } else if (prize == 2){
+    notprize = 3
+    choice = 2
+  } else{
+    notprize = 2
+    choice = 3
+  }
+  
+  
+  if(choice == prize){
+    1
+  } else {
+    0
+  }
+  
+  
+  
+
+  
+}
+
+monty_3doors_switch()
+
 ```
 
 Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
 Compare your answers with the actual theoretical predictions. 
 
 ```{r}
+
+
+num_trials <- 10000
+
+# Initialize a table to store the counts of each outcome
+outcome_table <- table(replicate(num_trials, paste(monty_3doors_switch(), collapse = "")))
+
+# Calculate empirical probabilities
+empirical_probs <- outcome_table / sum(outcome_table)
+
+# Create a data frame for the probability distribution table
+probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+
+probability_table
+
+
+
+
+num_trials <- 10000
+
+# Initialize a table to store the counts of each outcome
+outcome_table <- table(replicate(num_trials, paste(monty_3doors_noswitch(), collapse = "")))
+
+# Calculate empirical probabilities
+empirical_probs <- outcome_table / sum(outcome_table)
+
+# Create a data frame for the probability distribution table
+probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+
+probability_table
+
+
+print("The first table is the probabiltiy associated with you switching which results in a win frequency of about 66% while 
+      the second table is the probability associared with you now switching which results in a win frequency of about 33%. 
+      This reflects the actual theoretical probabilites.")
 
 ```
 
@@ -335,17 +417,79 @@ Step 3: you either switch or don't switch.
 Set up the experiment two functions "monty_10doors_noswitch" and "monty_10doors_switch" (these functions will have no input values):
 ```{r}
 monty_10doors_noswitch <- function(){
-  
+   prize <- sample(c(1:10), 1)
+    choice = 1
+    if (prize == choice){
+      1
+    } else{
+      0
+    }
 }
 
 monty_10doors_switch <- function(){
+  prize <-sample(c(1:10), 1)
+  choice = 1
+
+  if(prize == choice){
+    close<- sample(c(2:10),1)
+    choice = close
+  } else {
+    choice = prize
+  }
+  
+  if(choice == prize){
+    1
+  } else {
+    0
+  }
+  
+  
+  
+  
   
 }
+
+
 ```
 Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
 Compare your answers with the actual theoretical predictions (you need to calculate these). 
   
 ```{r}
+
+  num_trials <- 10000
+
+  # Initialize a table to store the counts of each outcome
+  outcome_table <- table(replicate(num_trials, paste(monty_10doors_switch(), collapse = "")))
+  
+  # Calculate empirical probabilities
+  empirical_probs <- outcome_table / sum(outcome_table)
+  
+  # Create a data frame for the probability distribution table
+  probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+  
+  probability_table
+  
+  
+  
+  
+  num_trials <- 10000
+  
+  # Initialize a table to store the counts of each outcome
+  outcome_table <- table(replicate(num_trials, paste(monty_10doors_noswitch(), collapse = "")))
+  
+  # Calculate empirical probabilities
+  empirical_probs <- outcome_table / sum(outcome_table)
+  
+  # Create a data frame for the probability distribution table
+  probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+  
+  probability_table
+  
+  
+  print("The first table represents the probability of switching after 8 doors are opened. This results in a 90% win rate. While
+        the second table represents the probability of not switching after 8 doors are opened. This results in a 10% win rate. 
+        The accurately aligns with the actual probabilities. For not switching you have to choose the prize on the first door. That
+        is a 1/10 chance. However, if you picked a door without a prize intially (9/10) then switched you would win the prize. ")
 
 ```
 
@@ -358,20 +502,95 @@ Step 3: you either stick with your original choice, or choose between one of the
 
 Set up the experiment two functions "monty_10doors_mod_noswitch" and "monty_10doors_mod_switch" (these functions will have no input values):
 ```{r}
-#monty_10doors_mod_noswitch <- function(){
+monty_10doors_mod_noswitch <- function(){
+     prize <- sample(c(1:10), 1)
+     choice = 1
+     
+     if(prize == choice){
+       1
+     } else {
+       0
+     }
+
   
-#}
+}
 #my_door_and_prize_door <- c(my_door, prize_door)
 #not_my_door_nor_prize_door <- doors[!doors %in% my_door_and_prize_door]
 
-#monty_10doors_mod_switch <- function(){
+monty_10doors_mod_switch <- function(){
+  prize <- sample(c(1:10),1)
+  choice = 1
   
-#}
+  if(prize == choice){
+    #you can't win if you choose the prize initially
+    0
+  } else {
+    
+    if(prize == 2){
+      door_choose <- sample(c(3:10),1)
+    } else if(prize == 10){
+      door_choose <-sample(c(2:9),1)
+    } else {
+      end = prize -1
+      start = prize +1
+      door_choose <-sample(c(2:end, start:10 ), 1)
+    }
+    
+    choose <- sample(c(door_choose, prize), 1)
+    
+    if(prize == choose){
+      1
+    } else {
+      0
+    }
+    
+    
+  }
+  
+  
+  
+  
+}
+
 ```
 Use your two functions and the replicate function to compute the empirical probablility of winning for the two experiments.
 Calculate the theoretical probability of winning a prize if you switch, and if you don't switch. 
 Compare your values to the empirical probabilities. 
 ```{r}
+  num_trials <- 10000
+
+  # Initialize a table to store the counts of each outcome
+  outcome_table <- table(replicate(num_trials, paste(monty_10doors_mod_switch(), collapse = "")))
+  
+  # Calculate empirical probabilities
+  empirical_probs <- outcome_table / sum(outcome_table)
+  
+  # Create a data frame for the probability distribution table
+  probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+  
+  probability_table
+  
+  
+  
+  
+  num_trials <- 10000
+  
+  # Initialize a table to store the counts of each outcome
+  outcome_table <- table(replicate(num_trials, paste(monty_10doors_mod_noswitch(), collapse = "")))
+  
+  # Calculate empirical probabilities
+  empirical_probs <- outcome_table / sum(outcome_table)
+  
+  # Create a data frame for the probability distribution table
+  probability_table <- data.frame(Outcome = names(empirical_probs), Probability = empirical_probs)
+  
+  probability_table
+  
+    print("The first table represents the probability of switching after 7 doors are opened. This results in a 45% win rate. While
+        the second table represents the probability of not switching after 7 doors are opened. This results in a 10% win rate. 
+        The accurately aligns with the actual probabilities. For not switching you have to choose the prize on the first door. That
+        is a 1/10 chance. However, if you picked a door without a prize intially (8/10) then switched you would have a 1/2 chance of switching
+        to the prize. So (8/10) * (1/2) = 0.4 ")
 
 ```
 Not for submission: Play with this modified setup, for example Monty opens $k$ doors at step 2 etc with $k$ any number between 1 and 8. 
@@ -430,15 +649,39 @@ In this part, we will assume that we are using testimony of reliable witnesses w
 Initialize $p=0.6$, $q=0.01$, and q_vals = c(), the empty vector. Run a for loop (1 in 1:40) inside it, update q at every iteration to $q = \text{bayes}(p,q)$, and concatenate the vector q_vals with this new value of q. 
 ```{r}
 
+  p = 0.6
+  q = 0.01
+  q_vals = c()
+  
+  for (x in 1:40){
+    q = bayes(p,q)
+    q_vals <-c(q_vals, q )
+  }
+
 ```
 
 Construct a plot with x-axis 1:40 and y-axis q_vals.
 ```{r}
 
+plot(1:40,q_vals,type="l",col="red",xlab="x-axis", ylab="y-axis")
+
+
 ```
 
 Repeat the above experiment with $p=0.4$, $q=0.99$. 
 ```{r}
+
+  p = 0.4
+  q = 0.99
+  q_vals = c()
+  
+  for (x in 1:40){
+    q = bayes(p,q)
+    q_vals <-c(q_vals, q )
+  }
+  
+  plot(1:40,q_vals,type="l",col="red",xlab="x-axis", ylab="y-axis")
+
 
 ```
 
@@ -450,6 +693,17 @@ Suppose we intialize  $p=0.6$ (witness reliability), $q=0.01$ (proportion of Blu
 
 You will need a counter variable initialized to zero and a while loop inside which you update $q$ using the bayes function, and update the counter by 1 at every iteration of the while loop. 
 ```{r}
+    count = 0
+    p = 0.6
+
+    q = bayes(0.6,0.01)
+    
+    while(q < 0.9 ){
+      q = bayes(p,q)
+      count = count+1
+    }
+print("You need this amount of witnesses")
+print(count)
 
 ```
 
@@ -461,14 +715,38 @@ In this problem we will work with two types of witnesses (1) reliable witnesses 
 Initialize $p_1=0.6$, $p_2 = 0.45$, $q=0.01$, and q_vals = c(), the empty vector. Run a for loop (1 in 1:90) inside it, update q at every even iteration to $q = \text{bayes}(p_2,q)$, and at every odd iteration to $q = \text{bayes}(p_1,q)$ (You will need to use a "if" command), and finally concatanating the vector q_vals with the new value of q at every iteration. 
 ```{r}
 
+p_1 = 0.6
+p_2 = 0.45
+q = 0.01
+q_vals = c()
+
+for(x in 1:90){
+  
+  if(x %% 2 == 0){
+    q = bayes(p_2,q)
+  } else {
+    q = bayes(p_1,q)
+  }
+  q_vals = c(q_vals, q)
+
+  
+}
+
+print(q_vals)
+
 
 ```
 
 Construct a plot with x-axis 1:90 and y-axis q_vals.
 ```{r}
+  plot(1:90,q_vals,type="l",col="red",xlab="x-axis", ylab="y-axis")
+
+
 
 ```
 What do you notice? (Compared to case with single witness)
+
+It takes more witnesses to reach a higher level of confidence
 
 ### How many witnesses needed?
 Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
@@ -476,6 +754,25 @@ Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$.
 Initialize $p_1=0.6$, $p_2 = 0.45$, $q=0.01$. How many witnesses will we have to have if we are going to sequentially work with one reliable witness followed by an unreliable witness? 
 
 ```{r}
+
+p_1 = 0.6
+p_2 = 0.45
+q = 0.01
+count = 1
+
+while(q<0.9){
+  
+  if(count %% 2 == 0){
+    q = bayes(p_2,q)
+  } else {
+    q = bayes(p_1,q)
+  }
+  count = count + 1
+  
+}
+
+print("We need this many witnesses")
+print(count-1)
 
 ```
 
@@ -489,14 +786,26 @@ Initialize $q=0.01$ and we will sample $p$ from the vector c(0.6, 0.8, 0.45, 0.3
 
 Now let q_vals = c(), the empty vector and run a for loop (1 in 1:100) inside it, update q by sampling p from the vector c(0.6, 0.8, 0.45, 0.3), and concatanating the vector q_vals with the new value of q at every iteration. 
 ```{r}
+    q = 0.01
+    q_vals = c()
+    
+    for(x in 1:100){
+      q = bayes(sample(c(0.6, 0.8, 0.45, 0.3), 1), q)
+      q_vals = c(q_vals, q)
+    }
+
+    print(q_vals)
 
 ```
 
 Construct a plot with x-axis 1:100 and y-axis q_vals.
 ```{r}
+  plot(1:100,q_vals,type="l",col="red",xlab="x-axis", ylab="y-axis")
 
 ```
 What do you notice? How does this compare with the earlier cases?
+
+The amount of witnesses increases faster than the earlier cases around the point 22.
 
 ### How many witnesses needed?
 Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$. 
@@ -504,6 +813,20 @@ Suppose the police decide to arrest the Blue cab driver if $P(B|W) \ge 0.9$.
 Initialize $q=0.01$ and we will sample $p$ from the vector c(0.6, 0.8, 0.45, 0.3) and suppose choosing a witness with either of these witness-reliabilities is equally likely. How many witnesses will we need to have if we are going to uniformly sample from each of these four types of of witnesses at every step? 
 
 ```{r}
+
+    count = 0
+    p = 0.6
+
+    q = bayes(sample(c(0.6, 0.8, 0.45, 0.3), 1),0.01)
+    
+    while(q < 0.9 ){
+      q = bayes(sample(c(0.6, 0.8, 0.45, 0.3), 1),q)
+      count = count+1
+    }
+    
+    print("You need this many witnesses")
+    print(count)
+
 
 ```
 
@@ -532,6 +855,8 @@ Initialize $q=0.01$ and we will choose $p$ by sampling the Beta distribution wit
 ```{r}
 
 ```
+
+
 
 
 
