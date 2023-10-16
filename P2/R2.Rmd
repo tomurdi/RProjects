@@ -1,11 +1,11 @@
 ---
 title: "Experiments, Conditional Probability, and Bayes' Theorem"
-author: " Your Name and id"
+author: " Hadijat Oke 117818512 Thomas Urdinola 117971262"
 output:
+  pdf_document:
+    toc: yes
   html_document:
     number_sections: yes    
-    toc: yes
-  pdf_document:
     toc: yes
 ---
 
