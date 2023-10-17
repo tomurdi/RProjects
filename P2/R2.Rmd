@@ -32,13 +32,13 @@ roll_dice()
 
 Use the replicate function to repeat this experiment 10000 times, store the output of the experiment in a variable "sum_die". 
 ```{r}
-sum_die <- replicate(1000,roll_dice())
+sum_die <- replicate(10000,roll_dice())
 sum_die
 ```
 Use "sum_die" to calculate the empirical probability of getting the sums 2, 3, 4, ..., 12. Compare your answers with the theoretical values.
 
 ```{r}
-X <- 1000
+X <- 10000
 sum_die <- replicate(X,roll_dice)
 sum_sample <- sample(c(1,2,3,4,5,6),size = X, replace = TRUE)
 sum(sum_sample[1]+sum_sample[2])
@@ -46,7 +46,7 @@ sum(sum_sample[1]+sum_sample[2])
 
 Plot the following: relative frequency of getting sum equal to 4 as a function of number of trials, for this experiment.
 ```{r}
-num_trials <- 1000
+num_trials <- 10000
 relative_frequencies <- numeric(num_trials)
 for (i in 1:num_trials) {
   outcomes <- replicate(i, roll_dice())
