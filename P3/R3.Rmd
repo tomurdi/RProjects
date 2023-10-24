@@ -24,49 +24,80 @@ Write a function plot_binom, that takes input values: n and p, and returns the d
 
 
 ```{r}
-# plot_binom_pmf <- function(n,p){
-#   
-# }
+plot_binom_pmf <- function(n=2, p=0.5){
+ x <- 0:n
+  binomvals <- dbinom( )
+  plot(x, pois, type = "h", lwd = 5,
+       main = paste("Poisson density: mu = ", mu),
+       xlab = "x", ylab = "P(X=x)")
+  abline(v = mu_X, col = 'red', lwd = 4)
+}
 ```
-Fix n = 40. Compute plots of the pmf for the following values of p: 0.05, 0.1, 0.4, 0.6, 0.9, 0.95. Have all the plots on the same frame.  
+Fix n = 40. Compute plots of the pmf for the following values of p: 0.05, 0.1, 0.4, 0.6, 0.9, 0.95. Have all the plots on the same frame.
 
 ```{r}
+n <- 40
+p_values <- c(0.05, 0.1, 0.4, 0.6, 0.9, 0.95)
 
+# Create an empty plot
+plot(1, type = "n", xlim = c(0, n), ylim = c(0, 0.2), xlab = "X", ylab = "Probability", main = "Binomial PMF")
+
+# Loop through the p values and plot the Binomial PMF for each
+colors <- rainbow(length(p_values))
+for (i in 1:length(p_values)) {
+  p <- p_values[i]
+  x <- 0:n
+  probabilities <- dbinom(x, size = n, prob = p)
+  lines(x, probabilities, col = colors[i], lwd = 2)
+}
 ```
 
 What do you notice about the shape of the plots? Consider skewness and symmetry.
 YOUR ANSWER: 
+- The shape of the plots are almost the same. Depending on whether it's skewed
+or not, we see a bell-shaped curve for each plot. For that curve, there is a
+concentration of data points around a specific area, which represents the 
+mean/high point of that curve.
 
 ## Cumulative Distribution Functions
 Write a function to plot the cumulative distribution function of the Binomial random variable, call it 'plot_binom_cdf'.
 ```{r}
-#plot_binom_pmf <- function(n=2, p=0.5){
-# x <- 0:n
-#  binomvals <- dbinom( )
-#  plot(x, pois, type = "h", lwd = 5,
-#       main = paste("Poisson density: mu = ", mu),
-#       xlab = "x", ylab = "P(X=x)")
-#  abline(v = mu_X, col = 'red', lwd = 4)
-#}
+plot_binom_cdf <- function(n, p) {
+  x <- 0:n  # Possible values of the random variable
+  cdf <- pbinom(x, size = n, prob = p)  # Calculate the CDF
+
+  # Plot the CDF
+  plot(x, cdf, type = "s", lwd = 2, xlab = "X", ylab = "CDF",
+       main = paste("Binomial CDF (n =", n, ", p =", p, ")"))
+}
 
 ```
 Fix n = 40. Compute plots of the of the graphs cdf for the following values of p: 0.05, 0.1, 0.4, 0.6, 0.9, 0.95. Have all graphs on the same plot (with different colors).
 Draw a horizontal line at $y=0.8$.
 ```{r}
-x <- seq(-10, 20, length.out = 1000)
-#plot(x, pbinom(x, size = 15, prob = 0.8))
+n <- 40
+p_values <- c(0.05, 0.1, 0.4, 0.6, 0.9, 0.95)
 
-par(mfrow = c(2,1))
-plot(x, pbinom(x, size = 15, prob = 0.99),
-     main = "CDF of Binomial with p = 0.99",
-     xlab = "x_values",
-     ylab = "cdf of Binnomial")
-plot(x, pbinom(x, size = 15, prob = 0.6))
-plot(x, pbinom(x, size = 15, prob = 0.4))
-plot(x, pbinom(x, size = 15, prob = 0.05))
+# Create an empty plot
+plot(1, type = "n", xlim = c(0, n), ylim = c(0, 1), xlab = "X", ylab = "CDF", main = "Binomial CDF")
+
+# Loop through the p values and plot the CDFs
+colors <- rainbow(length(p_values))
+for (i in 1:length(p_values)) {
+  p <- p_values[i]
+  x <- 0:n
+  cdf <- pbinom(x, size = n, prob = p)
+  lines(x, cdf, col = colors[i], lwd = 2)
+}
+
+# Add a horizontal line at y = 0.8
+abline(h = 0.8, col = "red", lty = 2)
 ```
 Interpret the values of $x$ where the line $y=0.8$ intersects the graphs of the different cdf.
 YOUR ANSWER:
+- The cdf represents the probability that the random variable is less than or
+equal to a value x. Based on the red line, we can see the different x values
+for each plot that have a probability that is less than or equal to .8
 
 # Poisson Distribution.
 ## Probability Mass Functions
@@ -98,13 +129,45 @@ For the following values of mu compute the plots for the pmf of the Poisson dist
 mu: 0.5, 1, 5, 8, 20, 50. Have all plots on the same frame. 
 
 ```{r}
+mu_values <- c(0.5, 1, 5, 8, 20, 50)
 
+# Create an empty plot
+plot(1, type = "n", xlim = c(0, max(mu_values) * 3), ylim = c(0, 0.4), xlab = "X", ylab = "Probability", main = "Poisson PMF")
+
+# Loop through the mu values and plot the PMFs
+colors <- rainbow(length(mu_values))
+for (i in 1:length(mu_values)) {
+  mu <- mu_values[i]
+  x <- 0:(mu * 3)
+  pmf <- dpois(x, lambda = mu)
+  lines(x, pmf, col = colors[i], lwd = 2)
+}
 ```
 
 ## Cumulative Distribution Functions
 Write a function 'plot_pois_cdf' that takes input $\mu$ and returns the plot of the cdf of the $\text{Pois}(\mu)$. 
 ```{r}
+plot_pois_cdf <- function(mu) {
+  x <- 0:(mu * 5)  # Adjust the range as needed
+  cdf <- ppois(x, lambda = mu)  # Calculate the Poisson CDF
+  plot(x, cdf, type = "s", lwd = 2, xlab = "X", ylab = "CDF",
+       main = paste("Poisson CDF (mu =", mu, ")"))
+}
 
+# Define the values of mu
+mu_values <- c(0.5, 1, 5, 8, 20, 50)
+
+# Create an empty plot
+plot(1, type = "n", xlim = c(0, max(mu_values) * 5), ylim = c(0, 1), xlab = "X", ylab = "CDF", main = "Poisson CDF")
+
+# Loop through the mu values and plot the CDFs
+colors <- rainbow(length(mu_values))
+for (i in 1:length(mu_values)) {
+  mu <- mu_values[i]
+  x <- 0:(mu * 5)
+  cdf <- ppois(x, lambda = mu)
+  lines(x, cdf, col = colors[i], lwd = 2)
+}
 ```
 For the following values of mu compute the plots for the pmf of the Poisson distribution:
 mu: 0.5, 1, 5, 8, 20, 50. Have all plots on the same frame. 
@@ -116,18 +179,51 @@ In class we noted the Poisson approximation of the Binomial distribution. Let's 
 
 Plot the graphs of the cdf of $\text{Binom}(n=10, p=0.5)$ and $\text{Pois}(\mu= 5)$ on the same plot. 
 ```{r}
+n <- 10
+p <- 0.5
+mu <- 5
 
+# Create a vector of x values
+x <- 0:max(n, mu * 5)
+
+# Calculate CDFs for both distributions
+binom_cdf <- pbinom(x, size = n, prob = p)
+poisson_cdf <- ppois(x, lambda = mu)
+
+# Create a plot
+plot(x, binom_cdf, type = "s", col = "blue", lwd = 2,
+     xlab = "X", ylab = "CDF", main = "Binomial and Poisson CDFs")
+lines(x, poisson_cdf, type = "s", col = "red", lwd = 2)
 ```
 Do the graphs overlap? Why/Why not?
 YOUR ANSWER: 
-
+- The graphs do overlap, as we see some cdf values intersect when x is between 4-7
+and when x is between 11 onwards.
 Now plot the graphs of the cdf of $\text{Binom}(n= 1000, p= 0.005)$ and $\text{Pois}(\mu= 5)$.
 
 ```{r}
+n_binom <- 1000
+p_binom <- 0.005
+mu_pois <- 5
 
+# Create a vector of x values
+x <- 0:max(n_binom, mu_pois * 3)
+
+# Calculate CDFs for both distributions
+binom_cdf <- pbinom(x, size = n_binom, prob = p_binom)
+poisson_cdf <- ppois(x, lambda = mu_pois)
+
+# Create a plot
+plot(x, binom_cdf, type = "l", col = "blue", lwd = 2,
+     xlab = "X", ylab = "CDF", main = "Binomial and Poisson CDFs")
+
+# Add the Poisson CDF to the existing plot
+lines(x, poisson_cdf, type = "l", col = "red", lwd = 2)
 ```
 Do the graphs overlap? Why/Why not?
 YOUR ANSWER: 
+- We can't see the Binomial distribution graph, meaning that they do have to
+overlap in order for the poisson to just be presented by itself
 
 
 # Normal Distibution
@@ -254,7 +350,28 @@ Set $\sigma = 0.4$. For values of $\mu$ given by $-1, -0.5, 0, 0.4, 0.9, 2.5, 4$
 ### Plotting Cummulative Distribution Functions
 Set $\sigma = 0.4$. For values of $\mu$ given by $-1, -0.5, 0, 0.4, 0.9, 2.5, 4$ plot the cumulative distribution functions of $N(\mu, \sigma)$ in the same plot. You might need to choose appropriate limits for the x-axis.
 ```{r}
+mu_values <- c(-1, -0.5, 0, 0.4, 0.9, 2.5, 4)
 
+# Define the common standard deviation
+sigma <- 0.4
+
+# Create a vector of x values with appropriate limits
+x <- seq(-2, 6, by = 0.01)  # Adjust the range as needed
+
+# Initialize an empty plot
+plot(x, dnorm(x, mean = mu_values[1], sd = sigma), type = "l", col = "blue", lwd = 2, 
+     xlab = "X", ylab = "Density", main = "Normal Distributions")
+
+# Loop through the mu values and plot the densities
+colors <- rainbow(length(mu_values))
+for (i in 1:length(mu_values)) {
+  mu <- mu_values[i]
+  density <- dnorm(x, mean = mu, sd = sigma)
+  lines(x, density, col = colors[i], lwd = 2)
+}
+
+# Add a legend
+legend("topright", legend = paste("mu =", mu_values), col = colors, lwd = 2, title = "Parameters")
 ```
 
 # Exponential Distribution
