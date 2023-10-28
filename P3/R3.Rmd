@@ -331,7 +331,7 @@ ggplot(data = plot_data_cdf_new,
       color = std_devs))+
   geom_line()+
   labs(title = "Normal Density Plots: Varying Std Devs",
-       subtitle = "Jonathan Fernandes",
+       subtitle = "",
        x = "x-axis", 
        y = "density")
 
@@ -344,9 +344,42 @@ What information does the point of intersection of two cdfs give us?
 ### Plotting Densities 
 Set $\sigma = 0.4$. For values of $\mu$ given by $-1, -0.5, 0, 0.4, 0.9, 2.5, 4$ plot the densities of $N(\mu, \sigma)$ in the same plot. You might need to choose appropriate limits for the x-axis.
 ```{r}
+m_1 <- pnorm(x, mean= -1, sd = 0.4)
+m_0.5 <- pnorm(x, mean= -0.5, sd = 0.4)
+m_0 <- pnorm(x, mean= 0, sd = 0.4)
+m_0.4 <- pnorm(x, mean= 0.4, sd = 0.4)
+m_0.9 <- pnorm(x, mean= 0.9, sd = 0.4)
+m_2.5 <- pnorm(x, mean= 2.5, sd = 0.4)
+m_4 <- pnorm(x, mean= 4, sd = 0.4)
+
+plot_data_cdf <- data.frame(x,m_1,m_0.5,m_0,m_0.4,m_0.9, m_2.5, m_4)
 
 ```
 
+
+```{r}
+plot_data_cdf_new <- pivot_longer(plot_data_cdf,
+                                  cols = c(m_1,m_0.5,m_0,m_0.4,m_0.9, m_2.5, m_4),
+                                  names_to = "means"
+                                  )
+
+
+```
+
+
+```{r}
+ggplot(data = plot_data_cdf_new,
+  aes(x = x, 
+      y = value, 
+      group = means,
+      color = means))+
+  geom_line()+
+  labs(title = "Normal Density Plots: Varying Means",
+       subtitle = "",
+       x = "x-axis", 
+       y = "density")
+
+```
 ### Plotting Cummulative Distribution Functions
 Set $\sigma = 0.4$. For values of $\mu$ given by $-1, -0.5, 0, 0.4, 0.9, 2.5, 4$ plot the cumulative distribution functions of $N(\mu, \sigma)$ in the same plot. You might need to choose appropriate limits for the x-axis.
 ```{r}
@@ -378,12 +411,80 @@ legend("topright", legend = paste("mu =", mu_values), col = colors, lwd = 2, tit
 ## Probablity Density Function 
 For values of $\lambda$ in $(0.2, 0.5, 1, 2, 8, 10)$ plot the graphs of the densities of $\text{Exp}(\lambda)$ in the same plot.
 ```{r}
+n_0.2 <- dexp(x, rate = 0.2)     
+n_0.5 <- dexp(x, rate = 0.5)     
+n_1 <- dexp(x, rate = 1)     
+n_2 <- dexp(x, rate = 2)     
+n_8 <- dexp(x, rate = 8)     
+n_10 <- dexp(x, rate = 10)     
+
+plot_data_pdf <- data.frame(x,n_0.2, n_0.5, n_1, n_2, n_8, n_10)
+
+```
+
+
+```{r}
+plot_data_pdf_new <- pivot_longer(plot_data_pdf,
+                                  cols = c(n_0.2, n_0.5, n_1, n_2, n_8, n_10),
+                                  names_to = "rates"
+                                  )
+
+
+```
+
+
+```{r}
+ggplot(data = plot_data_pdf_new,
+  aes(x = x, 
+      y = value, 
+      group = rates,
+      color = rates))+
+  geom_line()+
+  labs(title = "Exponential Density Plots: Varying Rates",
+       subtitle = "",
+       x = "x-axis", 
+       y = "density")
 
 ```
 
 ## Cummulative Distribution Function
 For values of $\lambda$ in $(0.2, 0.5, 1, 2, 8, 10)$ plot the graphs of the cumulative distribution function of $\text{Exp}(\lambda)$ in the same plot. Draw a horizontal line at $y=0.8$.
 ```{r}
+n_0.2 <- pexp(x, rate = 0.2)     
+n_0.5 <- pexp(x, rate = 0.5)     
+n_1 <- pexp(x, rate = 1)     
+n_2 <- pexp(x, rate = 2)     
+n_8 <- pexp(x, rate = 8)     
+n_10 <- pexp(x, rate = 10)     
+
+plot_data_cdf <- data.frame(x,n_0.2, n_0.5, n_1, n_2, n_8, n_10)
+
+```
+
+
+```{r}
+plot_data_cdf_new <- pivot_longer(plot_data_cdf,
+                                  cols = c(n_0.2, n_0.5, n_1, n_2, n_8, n_10),
+                                  names_to = "rates"
+                                  )
+
+
+```
+
+
+```{r}
+ggplot(data = plot_data_cdf_new,
+  aes(x = x, 
+      y = value, 
+      group = rates,
+      color = rates))+
+  geom_line()+
+  geom_hline(yintercept = 0.8)
+
+  labs(title = "Exponential Cummalative Plots: Varying Rates",
+       subtitle = "",
+       x = "x-axis", 
+       y = "density")
 
 ```
 
@@ -439,27 +540,149 @@ YOUR RESPONSE:
 
 ## $\alpha =1$ , varying scales
 Set $\alpha = 1$, vary $\beta$ over $0.2, 0.6, 1, 1.5, 2$. Plot the densities of $\text{Gamma}(\alpha, \beta)$ in a single plot.
-
 ```{r}
-
+x <- seq(0, 10, length.out = 1000)
 ```
 
+```{r}
+y_0.2 <- dgamma(x, shape = 1, scale = 0.2)
+y_0.6 <- dgamma(x, shape = 1, scale = 0.6)
+y_1 <- dgamma(x, shape = 1, scale = 1)
+y_1.5 <- dgamma(x, shape = 1, scale = 1.5)
+y_2 <- dgamma(x, shape = 1, scale = 2)
+
+plot_data_pdf <- data.frame(x,y_0.2,y_0.6,y_1,y_1.5, y_2)
+```
+
+```{r}
+plot_data_pdf_new <- pivot_longer(plot_data_pdf,
+                                  cols = c(y_0.2,y_0.6,y_1,y_1.5, y_2),
+                                  names_to = "scales"
+                                  )
+```
+
+```{r}
+ggplot(data = plot_data_pdf_new,
+  aes(x = x, 
+      y = value, 
+      group = scales,
+      color = scales))+
+  geom_line()+
+  labs(title = "Gamma Density Plots: Varying Scales at alpha 1",
+       subtitle = "Jonathan Fernandes",
+       x = "x-axis", 
+       y = "density")
+
+```
 ## $\alpha =0.6$ , varying scales
 Set $\alpha = 0.6$, vary $\beta$ over $0.2, 0.6, 1, 1.5, 2$. Plot the densities of $\text{Gamma}(\alpha, \beta)$ in a single plot.
 
 ```{r}
+x <- seq(0, 10, length.out = 1000)
+```
+
+```{r}
+y_0.2 <- dgamma(x, shape = 0.6, scale = 0.2)
+y_0.6 <- dgamma(x, shape = 0.6, scale = 0.6)
+y_1 <- dgamma(x, shape = 0.6, scale = 1)
+y_1.5 <- dgamma(x, shape = 0.6, scale = 1.5)
+y_2 <- dgamma(x, shape = 0.6, scale = 2)
+
+plot_data_pdf <- data.frame(x,y_0.2,y_0.6,y_1,y_1.5, y_2)
+```
+
+```{r}
+plot_data_pdf_new <- pivot_longer(plot_data_pdf,
+                                  cols = c(y_0.2,y_0.6,y_1,y_1.5, y_2),
+                                  names_to = "scales"
+                                  )
+```
+
+```{r}
+ggplot(data = plot_data_pdf_new,
+  aes(x = x, 
+      y = value, 
+      group = scales,
+      color = scales))+
+  geom_line()+
+  labs(title = "Gamma Density Plots: Varying Scales at alpha 0.6",
+       subtitle = "Jonathan Fernandes",
+       x = "x-axis", 
+       y = "density")
 
 ```
 
 ## $\alpha = 2$ , varying scales
 Set $\alpha = 2$, vary $\beta$ over $0.2, 0.6, 1, 1.5, 2$. Plot the densities of $\text{Gamma}(\alpha, \beta)$ in a single plot.
 ```{r}
+x <- seq(0, 10, length.out = 1000)
+```
+
+```{r}
+y_0.2 <- dgamma(x, shape = 2, scale = 0.2)
+y_0.6 <- dgamma(x, shape = 2, scale = 0.6)
+y_1 <- dgamma(x, shape = 2, scale = 1)
+y_1.5 <- dgamma(x, shape = 2, scale = 1.5)
+y_2 <- dgamma(x, shape = 2, scale = 2)
+
+plot_data_pdf <- data.frame(x,y_0.2,y_0.6,y_1,y_1.5, y_2)
+```
+
+```{r}
+plot_data_pdf_new <- pivot_longer(plot_data_pdf,
+                                  cols = c(y_0.2,y_0.6,y_1,y_1.5, y_2),
+                                  names_to = "scales"
+                                  )
+```
+
+```{r}
+ggplot(data = plot_data_pdf_new,
+  aes(x = x, 
+      y = value, 
+      group = scales,
+      color = scales))+
+  geom_line()+
+  labs(title = "Gamma Density Plots: Varying Scales at alpha 2",
+       subtitle = "Jonathan Fernandes",
+       x = "x-axis", 
+       y = "density")
 
 ```
 
 ## $\alpha = 5$ , varying scales
 Set $\alpha = 5$, vary $\beta$ over $0.2, 0.6, 1, 1.5, 2$. Plot the densities of $\text{Gamma}(\alpha, \beta)$ in a single plot.
 ```{r}
+x <- seq(0, 10, length.out = 1000)
+```
+
+```{r}
+y_0.2 <- dgamma(x, shape = 5, scale = 0.2)
+y_0.6 <- dgamma(x, shape = 5, scale = 0.6)
+y_1 <- dgamma(x, shape = 5, scale = 1)
+y_1.5 <- dgamma(x, shape = 5, scale = 1.5)
+y_2 <- dgamma(x, shape = 5, scale = 2)
+
+plot_data_pdf <- data.frame(x,y_0.2,y_0.6,y_1,y_1.5, y_2)
+```
+
+```{r}
+plot_data_pdf_new <- pivot_longer(plot_data_pdf,
+                                  cols = c(y_0.2,y_0.6,y_1,y_1.5, y_2),
+                                  names_to = "scales"
+                                  )
+```
+
+```{r}
+ggplot(data = plot_data_pdf_new,
+  aes(x = x, 
+      y = value, 
+      group = scales,
+      color = scales))+
+  geom_line()+
+  labs(title = "Gamma Density Plots: Varying Scales at alpha 5",
+       subtitle = "Jonathan Fernandes",
+       x = "x-axis", 
+       y = "density")
 
 ```
 
