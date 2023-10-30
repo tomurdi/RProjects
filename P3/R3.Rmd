@@ -1,6 +1,6 @@
 ---
 title: "Distributions: Discrete and Continuous"
-author: " Your Name and id"
+author: "Thomas Urdinola 117971262 Hadijat Oke 117818512"
 output:
   html_document:
     number_sections: yes    
@@ -490,6 +490,9 @@ ggplot(data = plot_data_cdf_new,
 
 Interpret the values of $x$ where the line $y=0.8$ intersects with the graphs of the cdfs. 
 YOUR ANSWER:
+- when the x-values intersect y = 0.8 it means that the probability 
+  of x has reached 0.8 with the given random variable. 
+
 
 # Gamma Distibution
 We will plot the Gamma distribution for different shapes and scales. You might need to adjust the limits of x and y axes appropriately.
@@ -509,14 +512,14 @@ y_1 <- dgamma(x, shape = 1, scale = 1)
 y_1.5 <- dgamma(x, shape = 1.5, scale = 1)
 y_2 <- dgamma(x, shape = 2, scale = 1)
 y_2.5 <- dgamma(x, shape = 2.5, scale = 1)
-#y_10 <- dgamma(x, shape = 10, scale = 1)
+y_10 <- dgamma(x, shape = 10, scale = 1)
 
-plot_data_pdf <- data.frame(x,y_1,y_1.5,y_2, y_2.5)
+plot_data_pdf <- data.frame(x,y_1,y_1.5,y_2, y_2.5,y_10)
 ```
 
 ```{r}
 plot_data_pdf_new <- pivot_longer(plot_data_pdf,
-                                  cols = c(y_1,y_1.5,y_2, y_2.5),
+                                  cols = c(y_1,y_1.5,y_2, y_2.5,y_10),
                                   names_to = "shapes"
                                   )
 ```
@@ -536,6 +539,9 @@ ggplot(data = plot_data_pdf_new,
 ```
 For each of the shapes, identify a feature that distinguishes one shape from the other. This to consider a: does it have a peak, concavity, presence of inflection points, ect.
 YOUR RESPONSE:
+- y_1.5, y_2, and y_2.5 all have points of inflection before there corresponding shape values. The all increase to a certain point then decrease.
+  y_1 decreases the entire time and y_10 decreases the entire time. The presence of the peaks increase in x values as the shapes increase.  
+
 
 
 ## $\alpha =1$ , varying scales
@@ -685,4 +691,3 @@ ggplot(data = plot_data_pdf_new,
        y = "density")
 
 ```
-
