@@ -1,6 +1,6 @@
 ---
 title: "Random Samples, Central Limit Theorem, and Estimators"
-author: "Student_Name/University ID"
+author: "Hadijat Oke 117818512, Thomas Urdinola 117971262"
 output:
   html_document:
     number_sections: yes
@@ -21,6 +21,29 @@ Consider the Binomial distribution $\text{Binom}(n=10, p = 0.8)$. We will get ra
 ### Probability Mass Function of $\text{Binom}(n=10, p = 0.8)$..
 Plot the probability mass function of $\text{Binom}(n=10, p = 0.8)$.
 ```{r}
+# Load necessary library for plotting
+library(ggplot2)
+
+# Define parameters
+n <- 10
+p <- 0.8
+
+# Create a sequence of x values from 0 to n
+x_values <- 0:n
+
+# Calculate the PMF using the dbinom function
+pmf_values <- dbinom(x_values, size = n, prob = p)
+
+# Create a data frame for plotting
+data <- data.frame(x = x_values, pmf = pmf_values)
+
+# Plot the PMF
+ggplot(data, aes(x = x, y = pmf)) +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+  labs(title = "PMF of Binomial Distribution (n=10, p=0.8)",
+       x = "Number of Successes",
+       y = "Probability") +
+  theme_minimal()
 
 ```
 
@@ -28,10 +51,22 @@ Plot the probability mass function of $\text{Binom}(n=10, p = 0.8)$.
 For the sample sizes $4, 7, 10, 15, 20, 30, 40, 80, 1000$ get random samples of respective size, and plot the histograms for each of these samples. 
 
 ```{r}
+# Sample sizes
+sample_sizes <- c(4, 7, 10, 15, 20, 30, 40, 80, 1000)
 
+# Generate random samples and plot histograms for each sample size
+par(mfrow = c(3, 3))  # Set the layout of the plots
+
+for (i in 1:length(sample_sizes)) {
+  sample_size <- sample_sizes[i]
+  sample <- rbinom(sample_size, size = 10, prob = 0.8)  # Generating random samples from a Binomial distribution
+  
+  hist(sample, main = paste("Sample Size:", sample_size), xlab = "Number of Successes", col = "skyblue", border = "black")
+}
 ```
 WHAT DO YOU NOTICE?
-
+When the sample size increases, the histograms tend to shape themselves to a more
+bell-shaped curve. This could be attributed to the central limit theorem
 
 
 ## Gamma Distribution
@@ -40,6 +75,29 @@ Consider the Gamma distribution $\text{Gamma}(\alpha = 2, \beta = 1.5)$. We will
 ### Density of $\text{Gamma}(\alpha = 4, \beta = 2)$.
 Plot the density curve of $\text{Gamma}(\alpha = 4, \beta = 2)$,
 ```{r}
+# Load necessary library for plotting
+library(ggplot2)
+
+# Define parameters
+alpha <- 4
+beta <- 2
+
+# Generate a sequence of x values
+x_values <- seq(0, 20, by = 0.1)  # Change the range and granularity as needed
+
+# Calculate the density values using dgamma function
+density_values <- dgamma(x_values, shape = alpha, rate = beta)
+
+# Create a data frame for plotting
+data <- data.frame(x = x_values, density = density_values)
+
+# Plot the density curve
+ggplot(data, aes(x = x, y = density)) +
+  geom_line(color = "blue", linewidth = 1) +
+  labs(title = "Density Curve of Gamma Distribution",
+       x = "x",
+       y = "Density") +
+  theme_minimal()
 
 
 ```
@@ -48,10 +106,23 @@ Plot the density curve of $\text{Gamma}(\alpha = 4, \beta = 2)$,
 For the sample sizes $4, 7, 10, 15, 20, 30, 40, 80, 1000$ get random samples of respective size, and plot the histograms for each of these samples. 
 
 ```{r}
+# Sample sizes
+sample_sizes <- c(4, 7, 10, 15, 20, 30, 40, 80, 1000)
+
+# Generate random samples and plot histograms for each sample size
+par(mfrow = c(3, 3))  # Set the layout of the plots
+
+for (i in 1:length(sample_sizes)) {
+  sample_size <- sample_sizes[i]
+  sample <- rgamma(sample_size, shape = 4, rate = 2)  # Generating random samples from a Gamma distribution
+  
+  hist(sample, main = paste("Sample Size:", sample_size), xlab = "Value", col = "skyblue", border = "black")
+}
 
 ```
 What do you notice?
-
+- The same pattern as above, higher sample sizes tend to shape themselves around
+a central mean, thus creating a bell shaped curve
 
 # Sampling Distribution of Sample Max
 ## Discrete Uniform distribution
@@ -59,6 +130,25 @@ Suppose we are working with the discrete uniform random variable taking values $
 
 Plot the pmf of the given discrete distribution
 ```{r}
+# Define the values of the discrete uniform random variable
+values <- 1:6
+
+# Calculate the probability mass function (since it's uniform, each value has equal probability)
+prob <- rep(1/length(values), length(values))
+
+# Create a data frame for plotting
+data <- data.frame(values = values, probability = prob)
+
+# Plot the PMF
+library(ggplot2)
+
+ggplot(data, aes(x = as.factor(values), y = probability)) +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+  labs(title = "PMF of Discrete Uniform Distribution",
+       x = "Values",
+       y = "Probability") +
+  theme_minimal() +
+  scale_x_discrete(labels = as.character(values))
 
 ```
 
@@ -66,36 +156,112 @@ Plot the pmf of the given discrete distribution
 
 Define a function "disc_samp" that takes input "n" and returns a random sample of size "n" from this distribution.
 ```{r}
+# Define the values of the discrete random variable
+values <- 1:6
+
+# Function to generate a random sample from a discrete uniform distribution
+disc_samp <- function(n) {
+  sample(values, size = n, replace = TRUE)
+}
 
 ```
-Use the "disc_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5, 15$.
+Use the "disc_samp" function and the replicate function to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5, 15$.
 Be sure to have appropriate titles for your histograms.
 
 ```{r}
+# Define the function to generate the sample maximum
+sample_max <- function(n) {
+  max(disc_samp(n))
+}
+
+# Sample sizes
+sample_sizes <- c(1, 2, 3, 4, 5, 15)
+
+# Generate the sampling distribution of sample maxima and plot histograms
+par(mfrow = c(2, 3))  # Set the layout of the plots
+
+for (size in sample_sizes) {
+  max_samples <- replicate(1000, sample_max(size))  # Generating 1000 samples
+  
+  hist(max_samples, main = paste("Sample Size:", size),
+       xlab = "Maximum Value", col = "skyblue", border = "black")
+}
 
 ```
 WHAT DO YOU NOTICE
-
+Larger sample sizes can attribute to less variety in answers when trying to find
+the sample max. The main reason is because when you have more numbers to be part
+of the sample, we could have a higher chance of rolling bigger numbers.
 
 ## A Skewed Discrete Distribution
 Suppose we are working with the discrete  random variable taking values $\{1, 2, 3, 4, 5, 6\}$ and having the following probability mass function: $$p(1) = 0.5, \quad  p(2) = p(3) = \cdots = p(6) = 0.1$$
 
 Plot the pmf of the given discrete distribution
 ```{r}
+# Define the values of the discrete random variable
+values <- 1:6
+
+# Define probabilities for each value
+probabilities <- c(0.5, 0.1, 0.1, 0.1, 0.1, 0.1)
+
+# Create a data frame for plotting
+data <- data.frame(values = values, probability = probabilities)
+
+# Plot the PMF
+library(ggplot2)
+
+ggplot(data, aes(x = as.factor(values), y = probability)) +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+  labs(title = "PMF of Discrete Distribution",
+       x = "Values",
+       y = "Probability") +
+  theme_minimal() +
+  scale_x_discrete(labels = as.character(values))
 
 ```
 Define a function "disc_samp_1" that takes input "n" and returns a random sample of size "n" from this distribution.
 ```{r}
+# Define the values of the discrete random variable
+values <- 1:6
+
+# Define probabilities for each value
+probabilities <- c(0.5, 0.1, 0.1, 0.1, 0.1, 0.1)
+
+# Function to generate a random sample from the given discrete distribution
+disc_samp_1 <- function(n) {
+  sample(values, size = n, replace = TRUE, prob = probabilities)
+}
 
 ```
-Use the "disc_samp_1" function and the replicate function to to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5 15$.
+Use the "disc_samp_1" function and the replicate function to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5 15$.
 Be sure to have appropriate titles for your histograms.
 
 ```{r}
+# Define the function to generate the sample maximum
+sample_max <- function(n) {
+  max(disc_samp_1(n))
+}
+
+# Sample sizes
+sample_sizes <- c(1, 2, 3, 4, 5, 15)
+
+# Set seed for reproducibility
+set.seed(42)
+
+# Generate the sampling distribution of sample maxima and plot histograms
+par(mfrow = c(2, 3))  # Set the layout of the plots
+
+for (size in sample_sizes) {
+  max_samples <- replicate(1000, sample_max(size))  # Generating 1000 samples
+  
+  hist(max_samples, main = paste("Sample Size:", size),
+       xlab = "Maximum Value", col = "skyblue", border = "black")
+}
 
 ```
 WHAT DO YOU NOTICE
-
+Higher sample sizes leads to lower variety in maximum values. It looks like it's
+skewed to the left every time we increase the size
 
 # Central Limit Theorem
 ## Exponential Distribution
