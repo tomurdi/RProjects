@@ -1,0 +1,220 @@
+---
+title: "Random Samples, Central Limit Theorem, and Estimators"
+author: "Student_Name/University ID"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes  
+  pdf_document:
+    toc: yes
+---
+
+In this project, we will work with the sampling distributions of statistics, the Central Limit Theorem (CLT), and properties of estimators.  
+
+
+The Central Limit Theorem and the properties of estimators are one of the most powerful concepts/tools that we learn in this course. It will send you back to the beginning of this class, require you to remind yourself and use the distributions and probability principles that we studied then, and yet at the end of this class now, it will set the stage for new beginnings for many things to come. Make sure to have fun, and good luck!
+
+# Random Samples
+## Binomial Distibution
+Consider the Binomial distribution $\text{Binom}(n=10, p = 0.8)$. We will get random samples from this distribution and check out the histograms for each of these samples. We expect that as the sample size increases, the sample distribution will provide an increasingly improved approximation of the the true distribution. 
+
+### Probability Mass Function of $\text{Binom}(n=10, p = 0.8)$..
+Plot the probability mass function of $\text{Binom}(n=10, p = 0.8)$.
+```{r}
+
+```
+
+### Sample distributions
+For the sample sizes $4, 7, 10, 15, 20, 30, 40, 80, 1000$ get random samples of respective size, and plot the histograms for each of these samples. 
+
+```{r}
+
+```
+WHAT DO YOU NOTICE?
+
+
+
+## Gamma Distribution
+Consider the Gamma distribution $\text{Gamma}(\alpha = 2, \beta = 1.5)$. We will get random samples from this distribution and check out the histograms for each of these samples. We expect that as the sample size increases, the sample distribution will provide an increasingly improved approximation of the the true distribution. 
+
+### Density of $\text{Gamma}(\alpha = 4, \beta = 2)$.
+Plot the density curve of $\text{Gamma}(\alpha = 4, \beta = 2)$,
+```{r}
+
+
+```
+
+### Sample distributions
+For the sample sizes $4, 7, 10, 15, 20, 30, 40, 80, 1000$ get random samples of respective size, and plot the histograms for each of these samples. 
+
+```{r}
+
+```
+What do you notice?
+
+
+# Sampling Distribution of Sample Max
+## Discrete Uniform distribution
+Suppose we are working with the discrete uniform random variable taking values $\{1, 2, 3, 4, 5, 6\}$.
+
+Plot the pmf of the given discrete distribution
+```{r}
+
+```
+
+
+
+Define a function "disc_samp" that takes input "n" and returns a random sample of size "n" from this distribution.
+```{r}
+
+```
+Use the "disc_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5, 15$.
+Be sure to have appropriate titles for your histograms.
+
+```{r}
+
+```
+WHAT DO YOU NOTICE
+
+
+## A Skewed Discrete Distribution
+Suppose we are working with the discrete  random variable taking values $\{1, 2, 3, 4, 5, 6\}$ and having the following probability mass function: $$p(1) = 0.5, \quad  p(2) = p(3) = \cdots = p(6) = 0.1$$
+
+Plot the pmf of the given discrete distribution
+```{r}
+
+```
+Define a function "disc_samp_1" that takes input "n" and returns a random sample of size "n" from this distribution.
+```{r}
+
+```
+Use the "disc_samp_1" function and the replicate function to to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5 15$.
+Be sure to have appropriate titles for your histograms.
+
+```{r}
+
+```
+WHAT DO YOU NOTICE
+
+
+# Central Limit Theorem
+## Exponential Distribution
+Suppose we are working with a population that has the exponential distibution with $\lambda = 2$. 
+
+Use the replicate function to get the histograms for the sampling distribution of the sample mean when working with sample sizes $n = 1, 2, 3, 4, 15, 500$.
+Be sure to have appropriate titles for your histograms. 
+
+```{r}
+samp_sizes  <- c(1, 2, 3, 4, 15, 500, 1000)
+
+par(mfrow=c(2,2))
+for(size in samp_sizes){
+  replicates <- replicate(10000, {
+    mean(rexp(size, rate = 5))
+  })
+  hist(replicates, breaks = 100,
+       main = paste("Samp Dist for Exp, samp size =", size ))
+}
+```
+
+What do you notice?
+
+## Discrete Uniform distibution
+
+Suppose we are working with the discrete uniform random variable taking values $\{1, 2, 3, 4, 5, 6\}$.
+
+Define a function "disc_samp" that takes input "n" and returns a random sample of size "n" from this distribution.
+
+```{r}
+
+```
+
+Use the "disc_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample mean when working with sample sizes $n = 1, 2, 3, 4, 15, 500$.
+Be sure to have appropriate titles for your histograms. 
+```{r}
+
+```
+
+What do you notice?
+
+## Continuous Uniform distibution
+
+Suppose we are working with the Continuous uniform random variable taking values on $(0,1)$.
+
+Define a function "cont_uni_samp" that takes input "n" and returns a random sample of size "n" from this distribution.
+
+```{r}
+
+```
+
+Use the "cont_uni_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample mean when working with sample sizes $n = 1, 2, 3, 4, 15, 500$.
+Be sure to have appropriate titles for your histograms. 
+```{r}
+
+```
+
+What do you notice?
+
+
+
+# Estimators for the Gamma parameters
+Recall from class that we calculated the estimators for $\alpha$ and $\beta$ using the method of moments for a sample of data values of size $n$ as:
+$$\hat{\alpha} = \frac{\overline{X}^2}{(1/n)\sum X_i^2 - \overline{X}^2}\quad \hat{\beta} = \frac{(1/n)\sum X_i^2 - \overline{X}^2}{\overline{X}}$$ 
+
+Write functions "alpha_hat" and "beta_hat" that take input a sample of data values "samp" and output the given estimators.
+```{r}
+
+```
+Now let's work with a Gamma distribution with $\alpha = 2$ and $\beta = 4$. 
+
+## Bias, Variance, and MSE of Gamma Estimators.
+Recall that we calculated the following identity in class:
+$$ \rm{MSE}(\hat{\theta}) = V(\hat{\theta}) + (\rm{Bias}(\hat{theta}))^2.$$ 
+This problem will empirically verify this identity. 
+\\
+
+Use the replicate function to calculate the empirical variance and bias of the estimators $\hat{\alpha}$ and $\hat{\beta}$ when sampling a sample of size 30 from $\rm{Gamma}(\alpha = 2, \beta = 4)$.
+Store these numbers in variables "var_emp" and "bias_emp".
+
+```{r}
+
+```
+
+Use the replicate function to calculate the Mean Squared Error for $\hat{\alpha}$ and $\hat{\beta}$ when sampling a sample of size 30 from $\rm{Gamma}(\alpha = 2, \beta = 4)$. Store this number in "MSE_emp".
+```{r}
+
+```
+
+If there is justice in this world, you must get $$\rm{mse}_{emp}\approx\rm{var}_{emp} + \rm{bias}_{emp}.$$
+Check if the above approximation holds. 
+```{r}
+
+```
+
+
+# Bias, Variance, and MSE for estimator for $\mu^2$
+Suppose we have a random sample of size n coming from the normal distribution $N(\mu= 5, \sigma = 1.5)$. Recall from class that $\hat{\theta} = \overline{X}^2$ is a biased estimator for $\mu^2$, and we calculated the bias to be
+
+$$ \text{Bias}(\hat{\theta}) = \frac{\sigma^2}{n}.$$ 
+
+Write function that takes input a random sample and outputs the square of the sample mean (this is the estimator $\hat{\theta}$. 
+```{r}
+
+```
+
+Use the replicate function to calculate the empirical variance and bias of the estimator $\hat{\theta}$ when sampling a sample of size 15 from $N(\mu = 5, \sigma = 1.5)$.
+Store these numbers in variables "var_emp" and "bias_emp".
+```{r}
+
+```
+
+Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}$ when sampling a sample of size 15 from  $N(\mu = 5, \sigma = 1.5)$. Store this number in "MSE_emp".
+
+```{r}
+
+```
+
+
+You must hopefully get $$\rm{mse}_{emp}\approx\rm{var}_{emp} + \rm{bias}_{emp}^2.$$
+
+Check if this is true for the estimator $\hat{\theta}$. 
