@@ -231,7 +231,7 @@ probabilities <- c(0.5, 0.1, 0.1, 0.1, 0.1, 0.1)
 disc_samp_1 <- function(n) {
   sample(values, size = n, replace = TRUE, prob = probabilities)
 }
-
+ 
 ```
 Use the "disc_samp_1" function and the replicate function to get the histograms for the sampling distribution of the sample max when working with sample sizes $n = 1, 2, 3, 4,5 15$.
 Be sure to have appropriate titles for your histograms.
@@ -293,15 +293,50 @@ Define a function "disc_samp" that takes input "n" and returns a random sample o
 
 ```{r}
 
+
+disc_samp <- function(n) {
+  sample(1:6, n, replace=T)
+}
+
+
+
 ```
 
 Use the "disc_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample mean when working with sample sizes $n = 1, 2, 3, 4, 15, 500$.
 Be sure to have appropriate titles for your histograms. 
 ```{r}
 
+
+# Define the function to generate the sample maximum
+sample_mean <- function(n) {
+  mean(disc_samp(n))
+}
+
+# Sample sizes
+sample_sizes <- c(1, 2, 3, 4, 15, 500)
+
+# Set seed for reproducibility
+set.seed(42)
+
+# Generate the sampling distribution of sample maxima and plot histograms
+par(mfrow = c(2, 3))  # Set the layout of the plots
+
+
+
+
+for (size in sample_sizes) {
+  max_samples <- replicate(1000, sample_mean(size))  # Generating 1000 samples
+  
+  hist(max_samples, main = paste("Sample Size:", size), 
+       xlab = "Maximum Value", col = "skyblue", border = "black")
+}
+
+
 ```
 
 What do you notice?
+
+As the sample size increases the distribution of the sample mean becomes more normal. 
 
 ## Continuous Uniform distibution
 
@@ -311,15 +346,45 @@ Define a function "cont_uni_samp" that takes input "n" and returns a random samp
 
 ```{r}
 
+cont_uni_samp <- function(n) {
+  sample(0:1, n, replace=T)
+}
+
+
 ```
 
 Use the "cont_uni_samp" function and the replicate function to to get the histograms for the sampling distribution of the sample mean when working with sample sizes $n = 1, 2, 3, 4, 15, 500$.
 Be sure to have appropriate titles for your histograms. 
 ```{r}
 
+# Define the function to generate the sample maximum
+sample_mean <- function(n) {
+  mean(cont_uni_samp(n))
+}
+
+# Sample sizes
+sample_sizes <- c(1, 2, 3, 4, 15, 500)
+
+# Set seed for reproducibility
+set.seed(42)
+
+# Generate the sampling distribution of sample maxima and plot histograms
+par(mfrow = c(2, 3))  # Set the layout of the plots
+
+
+
+
+for (size in sample_sizes) {
+  max_samples <- replicate(1000, sample_mean(size))  # Generating 1000 samples
+  
+  hist(max_samples, main = paste("Sample Size:", size), 
+       xlab = "Maximum Value", col = "skyblue", border = "black")
+}
 ```
 
 What do you notice?
+
+The frequency of each mean increased from the last distribution but ti still follows the pattern of becoming a normal distribution. 
 
 
 
@@ -329,6 +394,43 @@ $$\hat{\alpha} = \frac{\overline{X}^2}{(1/n)\sum X_i^2 - \overline{X}^2}\quad \h
 
 Write functions "alpha_hat" and "beta_hat" that take input a sample of data values "samp" and output the given estimators.
 ```{r}
+
+samp <- c(1, 2, 3)
+alpha_hat <- function(samp) {
+  
+  sum = 0
+  len = length(samp)
+  mean = mean(samp)
+
+  for(i in samp){
+    sum = sum + (i^2-mean^2)
+    
+  }
+  
+  return(mean^2/((1/len) * sum))
+  
+}
+
+beta_hat <- function(samp){
+  
+  sum = 0
+  len = length(samp)
+  mean = mean(samp)
+
+  for(i in samp){
+    sum = sum + (i^2-mean^2)
+    
+  }
+  
+  return(((1/len) * sum)/mean)
+  
+  
+  
+}
+
+
+
+
 
 ```
 Now let's work with a Gamma distribution with $\alpha = 2$ and $\beta = 4$. 
@@ -344,16 +446,59 @@ Store these numbers in variables "var_emp" and "bias_emp".
 
 ```{r}
 
+
+
+alpha_results <- replicate(10000, {
+  samp<- rgamma(30,shape = 2, scale = 4)
+  alpha_hat(samp)
+})
+
+var_emp_a <- mean((alpha_results - mean(alpha_results))^2)
+bias_emp_a <- mean((alpha_results - 2))
+
+cat("Variance for alpha ",var_emp)
+cat("\n")
+cat("Bias for alpha ", bias_emp)
+cat("\n")
+
+
+
+beta_results <- replicate(10000, {
+  samp<- rgamma(30,shape = 2, scale = 4)
+  beta_hat(samp)
+})
+
+var_emp <- mean((beta_results - mean(beta_results))^2)
+bias_emp <- mean((beta_results - 2))
+
+cat("Variance for beta ",var_emp)
+cat("\n")
+cat("Bias for beta ", bias_emp)
+
+
+
 ```
 
 Use the replicate function to calculate the Mean Squared Error for $\hat{\alpha}$ and $\hat{\beta}$ when sampling a sample of size 30 from $\rm{Gamma}(\alpha = 2, \beta = 4)$. Store this number in "MSE_emp".
 ```{r}
+
+MSE_emp_a <-mean((alpha_results - 2)^2)
+cat ("MSE of alpha ", MSE_emp_a)
+cat("\n")              
+MSE_emp <-mean((beta_results - 4)^2)
+cat ("MSE of beta ", MSE_emp)
+                
 
 ```
 
 If there is justice in this world, you must get $$\rm{mse}_{emp}\approx\rm{var}_{emp} + \rm{bias}_{emp}.$$
 Check if the above approximation holds. 
 ```{r}
+MSE_emp_a - (var_emp_a + (bias_emp_a))
+MSE_emp - (var_emp +(bias_emp))
+
+
+
 
 ```
 
@@ -366,17 +511,52 @@ $$ \text{Bias}(\hat{\theta}) = \frac{\sigma^2}{n}.$$
 Write function that takes input a random sample and outputs the square of the sample mean (this is the estimator $\hat{\theta}$. 
 ```{r}
 
+sample_mean <- function(n) {
+  mean(n)^(2)
+}
+
+
+
+
 ```
 
 Use the replicate function to calculate the empirical variance and bias of the estimator $\hat{\theta}$ when sampling a sample of size 15 from $N(\mu = 5, \sigma = 1.5)$.
 Store these numbers in variables "var_emp" and "bias_emp".
 ```{r}
 
+
+norm_results <- replicate(10000, {
+  samp<- rnorm(15, 5, 1.5)
+  sample_mean(samp)
+})
+
+var_emp <- mean((norm_results - mean(norm_results))^2)
+bias_emp <- mean((norm_results - 2))
+
+cat("Variance for theta ",var_emp)
+cat("\n")
+cat("Bias for theta ", bias_emp)
+cat("\n")
+
+
+
 ```
+
+
+
+
 
 Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}$ when sampling a sample of size 15 from  $N(\mu = 5, \sigma = 1.5)$. Store this number in "MSE_emp".
 
 ```{r}
+
+MSE_emp <-mean((norm_results - 5)^2)
+cat ("MSE of theta ", MSE_emp)
+
+
+
+ cat("\n")
+ MSE_emp - (var_emp +(bias_emp)^2)
 
 ```
 
