@@ -403,11 +403,11 @@ alpha_hat <- function(samp) {
   mean = mean(samp)
 
   for(i in samp){
-    sum = sum + (i^2-mean^2)
+    sum = sum + (i^2)
     
   }
   
-  return(mean^2/((1/len) * sum))
+  return(mean^2/((1/len) * (sum) - mean^2))
   
 }
 
@@ -418,11 +418,11 @@ beta_hat <- function(samp){
   mean = mean(samp)
 
   for(i in samp){
-    sum = sum + (i^2-mean^2)
+    sum = sum + (i^2)
     
   }
   
-  return(((1/len) * sum)/mean)
+  return(((1/len) * (sum) - mean^2)/mean)
   
   
   
@@ -453,8 +453,8 @@ alpha_results <- replicate(10000, {
   alpha_hat(samp)
 })
 
-var_emp_a <- mean((alpha_results - mean(alpha_results))^2)
-bias_emp_a <- mean((alpha_results - 2))
+var_emp_a <- var(alpha_results)
+bias_emp_a <- mean(alpha_results) - 2
 
 cat("Variance for alpha ",var_emp)
 cat("\n")
@@ -468,8 +468,8 @@ beta_results <- replicate(10000, {
   beta_hat(samp)
 })
 
-var_emp <- mean((beta_results - mean(beta_results))^2)
-bias_emp <- mean((beta_results - 2))
+var_emp <- var(beta_results)
+bias_emp <- mean(beta_results) - 4
 
 cat("Variance for beta ",var_emp)
 cat("\n")
@@ -482,10 +482,26 @@ cat("Bias for beta ", bias_emp)
 Use the replicate function to calculate the Mean Squared Error for $\hat{\alpha}$ and $\hat{\beta}$ when sampling a sample of size 30 from $\rm{Gamma}(\alpha = 2, \beta = 4)$. Store this number in "MSE_emp".
 ```{r}
 
-MSE_emp_a <-mean((alpha_results - 2)^2)
+alpha_results <- replicate(10000, {
+  samp<- rgamma(30,shape = 2, scale = 4)
+  alpha_hat(samp)
+})
+
+
+
+
+MSE_emp_a <- mean(alpha_results-2)^2
 cat ("MSE of alpha ", MSE_emp_a)
 cat("\n")              
-MSE_emp <-mean((beta_results - 4)^2)
+
+
+
+beta_results <- replicate(10000, {
+  samp<- rgamma(30,shape = 2, scale = 4)
+  beta_hat(samp)
+})
+
+MSE_emp <- mean(beta_results-4)^2
 cat ("MSE of beta ", MSE_emp)
                 
 
@@ -530,8 +546,8 @@ norm_results <- replicate(10000, {
   sample_mean(samp)
 })
 
-var_emp <- mean((norm_results - mean(norm_results))^2)
-bias_emp <- mean((norm_results - 2))
+var_emp <- var(norm_results)
+bias_emp <- mean(norm_results) - 5
 
 cat("Variance for theta ",var_emp)
 cat("\n")
@@ -550,7 +566,13 @@ Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}
 
 ```{r}
 
-MSE_emp <-mean((norm_results - 5)^2)
+norm_results <- replicate(10000, {
+  samp<- rnorm(15, 5, 1.5)
+  sample_mean(samp)
+})
+
+
+MSE_emp <- mean(norm_results-5)^2
 cat ("MSE of theta ", MSE_emp)
 
 
