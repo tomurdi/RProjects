@@ -443,8 +443,6 @@ Store these numbers in variables "var_emp" and "bias_emp".
 
 ```{r}
 
-
-
 alpha_results <- replicate(10000, {
   samp<- rgamma(30,shape = 2, scale = 4)
   alpha_hat(samp)
@@ -486,7 +484,7 @@ alpha_results <- replicate(10000, {
 
 
 
-MSE_emp_a <- mean(alpha_results-2)^2
+MSE_emp_a <- mean((alpha_results - 2)^2)
 cat ("MSE of alpha ", MSE_emp_a)
 cat("\n")              
 
@@ -497,7 +495,7 @@ beta_results <- replicate(10000, {
   beta_hat(samp)
 })
 
-MSE_emp <- mean(beta_results-4)^2
+MSE_emp <- mean((beta_results - 4)^2)
 cat ("MSE of beta ", MSE_emp)
                 
 
@@ -507,6 +505,7 @@ If there is justice in this world, you must get $$\rm{mse}_{emp}\approx\rm{var}_
 Check if the above approximation holds. 
 ```{r}
 MSE_emp_a - (var_emp_a + (bias_emp_a))
+MSE_emp - (var_emp + bias_emp)
 
 
 
@@ -536,15 +535,8 @@ Use the replicate function to calculate the empirical variance and bias of the e
 Store these numbers in variables "var_emp" and "bias_emp".
 ```{r}
 
-
-mu <- 5
-sigma <- 1.5
-sample_size <- 15
-num_replicates <- 1000  
-
-
 theta_estimates <- replicate(num_replicates, {
-  sample_data <- rnorm(sample_size, mean = mu, sd = sigma)
+  sample_data <- rnorm(15, mean = 5, sd = 1.5)
   sample_mean(sample_data)
 })
 
@@ -569,13 +561,8 @@ Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}
 
 ```{r}
 
-mu <- 5
-sigma <- 1.5
-sample_size <- 15
-num_replicates <- 1000
-
-theta_estimates <- replicate(num_replicates, {
-  sample_data <- rnorm(sample_size, mean = mu, sd = sigma)
+theta_estimates <- replicate(1000, {
+  sample_data <- rnorm(15, mean = 5, sd = 1.5)
   sample_mean(sample_data)
 })
 
@@ -592,6 +579,7 @@ You must hopefully get $$\rm{mse}_{emp}\approx\rm{var}_{emp} + \rm{bias}_{emp}^2
 
 Check if this is true for the estimator $\hat{\theta}$. 
 ```{r}
+
 MSE_emp - (var_emp + (bias_emp)^2)
 
 
