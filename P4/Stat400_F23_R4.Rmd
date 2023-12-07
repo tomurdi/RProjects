@@ -535,14 +535,17 @@ Use the replicate function to calculate the empirical variance and bias of the e
 Store these numbers in variables "var_emp" and "bias_emp".
 ```{r}
 
-theta_estimates <- replicate(num_replicates, {
+theta_estimates <- replicate(1000, {
   sample_data <- rnorm(15, mean = 5, sd = 1.5)
   sample_mean(sample_data)
 })
 
+# Generate replicates and calculate theta_hat
 
+
+# Calculate empirical variance and bias for theta_hat
 var_emp <- var(theta_estimates)
-bias_emp <- mean(theta_estimates) - mu^2
+bias_emp <- mean(theta_estimates) - 5^2
 
 cat("Empirical Variance of theta_hat:", var_emp)
 cat("\n")
@@ -561,13 +564,18 @@ Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}
 
 ```{r}
 
+
+
+# Generate replicates and calculate theta_hat
 theta_estimates <- replicate(1000, {
   sample_data <- rnorm(15, mean = 5, sd = 1.5)
   sample_mean(sample_data)
 })
 
+# Calculate true value for theta
+true_value <- 5^2
 
-true_value <- mu^2
+# Calculate Mean Squared Error (MSE) for theta_hat
 MSE_emp <- mean((theta_estimates - true_value)^2)
 
 cat("Mean Squared Error of theta_hat:", MSE_emp, "\n")
