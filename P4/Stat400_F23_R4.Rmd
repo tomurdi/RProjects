@@ -284,6 +284,7 @@ for(size in samp_sizes){
 ```
 
 What do you notice?
+Larger sample sizes leads to a more normal bell-curve distribution
 
 ## Discrete Uniform distibution
 
@@ -395,7 +396,7 @@ $$\hat{\alpha} = \frac{\overline{X}^2}{(1/n)\sum X_i^2 - \overline{X}^2}\quad \h
 Write functions "alpha_hat" and "beta_hat" that take input a sample of data values "samp" and output the given estimators.
 ```{r}
 
-samp <- c(1, 2, 3)
+
 alpha_hat <- function(samp) {
   
   sum = 0
@@ -403,11 +404,11 @@ alpha_hat <- function(samp) {
   mean = mean(samp)
 
   for(i in samp){
-    sum = sum + (i^2)
+    sum = sum + (i^2) - mean^2
     
   }
   
-  return(mean^2/((1/len) * (sum) - mean^2))
+  return(mean^2/((1/len) * (sum)))
   
 }
 
@@ -418,19 +419,15 @@ beta_hat <- function(samp){
   mean = mean(samp)
 
   for(i in samp){
-    sum = sum + (i^2)
+    sum = sum + (i^2) - mean^2
     
   }
   
-  return(((1/len) * (sum) - mean^2)/mean)
+  return(((1/len) * (sum))/mean)
   
   
   
 }
-
-
-
-
 
 ```
 Now let's work with a Gamma distribution with $\alpha = 2$ and $\beta = 4$. 
@@ -456,9 +453,9 @@ alpha_results <- replicate(10000, {
 var_emp_a <- var(alpha_results)
 bias_emp_a <- mean(alpha_results) - 2
 
-cat("Variance for alpha ",var_emp)
+cat("Variance for alpha ",var_emp_a)
 cat("\n")
-cat("Bias for alpha ", bias_emp)
+cat("Bias for alpha ", bias_emp_a)
 cat("\n")
 
 
@@ -489,7 +486,6 @@ alpha_results <- replicate(10000, {
 
 
 
-
 MSE_emp_a <- mean(alpha_results-2)^2
 cat ("MSE of alpha ", MSE_emp_a)
 cat("\n")              
@@ -511,7 +507,7 @@ If there is justice in this world, you must get $$\rm{mse}_{emp}\approx\rm{var}_
 Check if the above approximation holds. 
 ```{r}
 MSE_emp_a - (var_emp_a + (bias_emp_a))
-MSE_emp - (var_emp +(bias_emp))
+
 
 
 
@@ -541,17 +537,24 @@ Store these numbers in variables "var_emp" and "bias_emp".
 ```{r}
 
 
-norm_results <- replicate(10000, {
-  samp<- rnorm(15, 5, 1.5)
-  sample_mean(samp)
+mu <- 5
+sigma <- 1.5
+sample_size <- 15
+num_replicates <- 1000  
+
+
+theta_estimates <- replicate(num_replicates, {
+  sample_data <- rnorm(sample_size, mean = mu, sd = sigma)
+  sample_mean(sample_data)
 })
 
-var_emp <- var(norm_results)
-bias_emp <- mean(norm_results) - 5
 
-cat("Variance for theta ",var_emp)
+var_emp <- var(theta_estimates)
+bias_emp <- mean(theta_estimates) - mu^2
+
+cat("Empirical Variance of theta_hat:", var_emp)
 cat("\n")
-cat("Bias for theta ", bias_emp)
+cat("Empirical Bias of theta_hat:", bias_emp)
 cat("\n")
 
 
@@ -566,19 +569,21 @@ Use the replicate function to calculate the Mean Squared Error for $\hat{\theta}
 
 ```{r}
 
-norm_results <- replicate(10000, {
-  samp<- rnorm(15, 5, 1.5)
-  sample_mean(samp)
+mu <- 5
+sigma <- 1.5
+sample_size <- 15
+num_replicates <- 1000
+
+theta_estimates <- replicate(num_replicates, {
+  sample_data <- rnorm(sample_size, mean = mu, sd = sigma)
+  sample_mean(sample_data)
 })
 
 
-MSE_emp <- mean(norm_results-5)^2
-cat ("MSE of theta ", MSE_emp)
+true_value <- mu^2
+MSE_emp <- mean((theta_estimates - true_value)^2)
 
-
-
- cat("\n")
- MSE_emp - (var_emp +(bias_emp)^2)
+cat("Mean Squared Error of theta_hat:", MSE_emp, "\n")
 
 ```
 
@@ -586,3 +591,8 @@ cat ("MSE of theta ", MSE_emp)
 You must hopefully get $$\rm{mse}_{emp}\approx\rm{var}_{emp} + \rm{bias}_{emp}^2.$$
 
 Check if this is true for the estimator $\hat{\theta}$. 
+```{r}
+MSE_emp - (var_emp + (bias_emp)^2)
+
+
+```
